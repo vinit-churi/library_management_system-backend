@@ -1,0 +1,33 @@
+This file contains the steps that I followed to complete the task
+Step 1 : Analyze the problem statement and device actionable steps.
+    => The problem statement is to create a library management web application 
+        1. Create a database to store the books and the users
+        2. Create a REST API to perform CRUD operations on the database
+        3. Create a web application to consume the REST API
+        4. Create a login page to authenticate the users
+        5. Create a dashboard to display the books and the users
+        6. Create a page to add new books
+Step 2: First start working on building the backend rest api using expressJs for the CRUD operations and mongoose for the database connection to mongoDB.
+    Endpoints:
+        /books
+            GET - To get all the books
+        /books/create
+            POST - To create a new book
+        /books/:id
+            GET - To get a book by id
+            PUT - To update a book by id
+            DELETE - To delete a book by id
+        /users/create
+            POST - To create a new user
+        /users/login
+            POST - To login a user
+        /users/register
+            POST - To register a user
+        /users/:id
+            GET - To get a user by id
+            PUT - To update a user by id
+            DELETE - To delete a user by id
+    User permissions:
+        1. CREATOR - Can create, update, delete a book.
+        2. VIEW_ALL - Can view all the books.
+        
