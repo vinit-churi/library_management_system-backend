@@ -2,8 +2,18 @@ import Book from "../models/book.js";
 
 export const getAllBooks = async (req, res) => {
   try {
-    const books = await Book.find({});
-    res.send(books);
+    const searchParams = req.query;
+    console.log(searchParams);
+    let query = {};
+    if (searchParams?.sort === "old") {
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      query = { createdAt: { $lt: tenMinutesAgo } };
+    } else if (searchParams?.sort === "new") {
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      query = { createdAt: { $gte: tenMinutesAgo } };
+    }
+    const books = await Book.find(query);
+    res.status(200).send(books);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -13,7 +23,7 @@ export const createBook = async (req, res) => {
   try {
     const book = new Book(req.body);
     await book.save();
-    res.status(201).send(book);
+    res.status(200).send(book);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -26,7 +36,7 @@ export const getBookById = async (req, res) => {
     if (!book) {
       return res.status(404).send();
     }
-    res.send(book);
+    res.status(200).send(book);
   } catch (error) {
     res.status(500).send({ message: "Invalid ID" });
   }
@@ -40,7 +50,7 @@ export const updateBookById = async (req, res) => {
     if (!book) {
       return res.status(404).send();
     }
-    res.send(book);
+    res.status(200).send(book);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -52,7 +62,7 @@ export const deleteBookById = async (req, res) => {
     if (!book) {
       return res.status(404).send();
     }
-    res.send(book);
+    res.status(200).send(book);
   } catch (error) {
     res.status(500).send();
   }

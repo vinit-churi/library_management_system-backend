@@ -24,7 +24,7 @@ export const loginUser = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    res.send({ user, token });
+    res.status(200).send({ user, token });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -43,10 +43,34 @@ export const registerUser = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    res.status(201).send({ user, token });
+    res.status(200).send({ user, token });
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    res.status(400).send({ message: "Invalid or missing fields" });
+  }
+};
+
+export const getUserByToken = async (req, res) => {
+  console.log("hitting getUserByToken");
+  try {
+    const token = req.header("Authorization").replace("Bearer ", "");
+    if (!token) {
+      return res
+        .status(401)
+        .send({ message: "Authentication token must be provided" });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    console.log(req.user);
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).send();
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(401).send({ message: "Invalid or expired token" });
+    console.log("Invalid or expired token");
+    console.log(error);
   }
 };
 
@@ -56,7 +80,7 @@ export const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).send();
     }
-    res.send(user);
+    res.status(200).send(user);
   } catch (error) {
     res.status(500).send();
   }
