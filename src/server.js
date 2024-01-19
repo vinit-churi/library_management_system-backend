@@ -6,6 +6,7 @@ import bookRoutes from "./routes/books.js";
 import userRoutes from "./routes/users.js";
 import Log from "./models/log.js";
 import morgan from "morgan";
+import logHandler from "./controllers/logs.js";
 dotenv.config();
 
 const app = express();
@@ -25,6 +26,7 @@ app.use(morgan("combined", { stream }));
 
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);
+app.get("/api/logs", logHandler);
 
 mongoose
   .connect(process.env.MONGODB_URI)
