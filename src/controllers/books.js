@@ -3,16 +3,21 @@ import Book from "../models/book.js";
 export const getAllBooks = async (req, res) => {
   try {
     const searchParams = req.query;
-    console.log(searchParams);
     let query = {};
-    if (searchParams?.sort === "old") {
+    if (searchParams?.sort === "new") {
       const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-      query = { createdAt: { $lt: tenMinutesAgo } };
-    } else if (searchParams?.sort === "new") {
-      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      console.log(tenMinutesAgo);
       query = { createdAt: { $gte: tenMinutesAgo } };
+    } else if (searchParams?.sort === "old") {
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      console.log(tenMinutesAgo);
+      query = { createdAt: { $lt: tenMinutesAgo } };
     }
     const books = await Book.find(query);
+    console.log("====================================");
+    console.log(searchParams);
+    console.log(books);
+    console.log("====================================");
     res.status(200).send(books);
   } catch (error) {
     res.status(500).send(error);
